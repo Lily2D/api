@@ -1,3 +1,5 @@
-name lily
-description built in API for Lily2D
-edition 2026
+name: lily
+version: "0.3.26"
+description: built in API for Lily2D
+edition: 2026
+type: :lib

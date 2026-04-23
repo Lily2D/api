@@ -29,22 +29,7 @@ struct Layout {
     entries: Vec<LayoutEntry; 32>
 }
 
-struct Vec2f {
-    x: F32
-    y: F32
-}
 
-
-struct Vec4f {
-    x: F32
-    y: F32
-    z: F32
-    w: F32
-}
-
-struct Mat4f {
-    v: Block<Vec4f; 4> // column based
-}
 
 struct Range {
     start: Int
@@ -482,7 +467,5 @@ external 905 fn add_pass(pass: RenderPass, description: String)
 
 external 910 fn create_uniform_buffer(buffer: Any, description: String) -> BufferHandle
 
-// Should be in gm later (gfx math)
-external 997 fn sprite_model(pos_x: F32, pos_y: F32, size_x: F32, size_y: F32, rotation: F32) -> Mat4f
-external 998 fn view_projection_2d(width: F32, height: F32, center_x: F32, center_y: F32, zoom: F32) -> Mat4f
-external 999 fn rotate(x: F32, y: F32, z: F32) -> Mat4f
+/// The size of the renderable surface. Return (Width, Height).
+external 990 fn surface_extent() -> (Int, Int)
