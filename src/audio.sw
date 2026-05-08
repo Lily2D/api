@@ -1,4 +1,6 @@
-//! Lily2D Audio API
+//! # Lily Audio API
+//!
+//! Sound effects and music playback with ADSR support.
 //!
 //! Voice-based synth with 8 stereo voices and per-sound ADSR settings.
 //! The mixer renders signed 16-bit stereo at 44.1 kHz and resamples to the
@@ -9,7 +11,7 @@
 /// Number of concurrent hardware/software voices.
 const VOICE_COUNT = 8
 
-/// Voice index in the range 0..VOICE_COUNT-1.
+/// Voice index in the range `0..VOICE_COUNT-1`.
 type Voice = Int
 
 /// MIDI note number.
@@ -54,6 +56,7 @@ struct Adsr {
 /// Per-resource playback definition.
 ///
 /// - adsr: Envelope used when the voice is triggered.
+///
 /// - root_note: Natural pitch of the source sample.
 struct SoundDefinition {
     adsr: Adsr

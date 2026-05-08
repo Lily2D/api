@@ -1,8 +1,11 @@
-#![api]
+//! # WebGPU Library for Lily
+//!
+//! Render passes, shaders and buffers for [WebGPU](https://en.wikipedia.org/wiki/WebGPU).
+//!
 
-///
-/// [WebGPU](https://en.wikipedia.org/wiki/WebGPU) abstraction module. Do not modify this file!
-///
+// Do not modify this file!
+
+#![api]
 
 
 #[extensions("wgsl")]

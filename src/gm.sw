@@ -1,4 +1,6 @@
-//! Graphics and Rendering Math library (mainly for WebGPU).
+//! # Lily Math library for Graphics and Rendering.
+//!
+//! Math library only for presentation, has support for 2D and 3D vector, Quaternion, and Matrix
 //!
 //! ⚠️ WARNING: NOT CROSS-PLATFORM BITWISE DETERMINISTIC
 //!

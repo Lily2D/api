@@ -1,4 +1,6 @@
-//! Screen related functions
+//! # Screen and Window functions
+//!
+//! Support for cursor and in the future screen resolution queries and selection.
 
 #![api]
 
