@@ -332,7 +332,88 @@ impl Mat4 {
     ///
     /// `width` and `height` are viewport dimensions in pixels.
     /// `zoom` must be positive.
+    ///
+    ///
+    /// World-space view:
+    ///
+    ///                       x = -visible_width/2        x = +visible_width/2
+    /// y = -visible_height/2  ┌────────────────────────────┐
+    ///                        │                            │
+    ///                        │          (0,0)             │
+    ///                        │            ┼── +x          │
+    ///                        │            │               │
+    ///                        │            ▼ +y            │
+    ///                        │                            │
+    /// y = +visible_height/2  └────────────────────────────┘
+    ///
+    ///
+    /// Clip-space output:
+    ///
+    ///          x = -1.0      x = +1.0
+    /// y = -1.0 ┌──────────────────┐
+    ///          │                  │
+    ///          │ Right Hand Ortho │
+    ///          │ (with flipped Y) │
+    ///          │                  │
+    /// y = +1.0 └──────────────────┘
+    ///
+    /// z:  0.0  -->  -1.0
+    ///     near       far
+    ///
+    ///
+    /// After projection it gets converted to the actual WebGPU device coordinates (Normalized Device Coordinates):
+    ///
+    ///
+    ///          x = -1.0      x = +1.0
+    /// y = -1.0 ┌──────────────────┐
+    ///          │                  │
+    ///          │   NDC (WebGPU)   │
+    ///          │                  │
+    /// y = +1.0 └──────────────────┘
+    ///
+    /// depth: 0.0 --> 1.0
+    ///     near       far
     external 11600 fn ortho_2d_y_down_int(width: Int, height: Int, zoom: Float) -> Mat4
+
+
+    /// Return an orthographic projection matrix for 2D with normal RH (Y-going up).
+    ///
+    /// `width` and `height` are viewport dimensions in pixels.
+    /// `zoom` must be positive.
+    ///
+    ///          x = -1.0      x = +1.0
+    /// y = +1.0 ┌──────────────────┐
+    ///          │                  │
+    ///          │ Right Hand Ortho │
+    ///          │                  │
+    /// y = -1.0 └──────────────────┘
+    ///
+    /// z:  0.0  -->  -1.0
+    ///     near       far
+    ///
+    ///
+    /// After projection it gets converted to the actual WebGPU device coordinates (Normalized Device Coordinates):
+    ///
+    ///
+    ///          x = -1.0      x = +1.0
+    /// y = -1.0 ┌──────────────────┐
+    ///          │                  │
+    ///          │   NDC (WebGPU)   │
+    ///          │                  │
+    /// y = +1.0 └──────────────────┘
+    ///
+    /// depth: 0.0 --> 1.0
+    ///     near       far
+    external 11618 fn ortho_2d_int(width: Int, height: Int, zoom: Float) -> Mat4
+
+    external 11619 fn ortho_2d_y_down_near_far_int(width: Int, height: Int, near: Int, far: Int) -> Mat4
+
+    /// Uses pixel centers (-0.5)
+    external 11620 fn ortho_2d_pixel_y_down_near_far_int(width: Int, height: Int, near: Int, far: Int) -> Mat4
+
+    /// Uses pixel centers (-0.5)
+    external 11621 fn ortho_2d_pixel_near_far_int(width: Int, height: Int, near: Int, far: Int) -> Mat4
+
 
     /// Return a translation matrix
     external 11601 fn from_translation(translation: Vec3) -> Mat4

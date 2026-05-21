@@ -1,7 +1,6 @@
 //! # WebGPU Library for Lily
 //!
 //! Render passes, shaders and buffers for [WebGPU](https://en.wikipedia.org/wiki/WebGPU).
-//!
 
 // Do not modify this file!
 
@@ -32,8 +31,7 @@ struct Layout {
     entries: Vec<LayoutEntry; 32>
 }
 
-
-
+// TODO: Support Swamp range type directly?
 struct Range {
     start: Int
     count: Int
@@ -76,83 +74,83 @@ type ShaderModuleHandle = Int
 /// Vertex attribute format
 enum VertexFormat {
     /// One unsigned byte (u8). `u32` in shaders.
-    Uint8,
+    Uint8
     /// Two unsigned bytes (u8). `vec2<u32>` in shaders.
-    Uint8x2 ,
+    Uint8x2
     /// Four unsigned bytes (u8). `vec4<u32>` in shaders.
-    Uint8x4,
+    Uint8x4
 
     /// One signed byte (i8). `i32` in shaders.
-    Sint8,
+    Sint8
     /// Two signed bytes (i8). `vec2<i32>` in shaders.
-    Sint8x2,
+    Sint8x2
     /// Four signed bytes (i8). `vec4<i32>` in shaders.
-    Sint8x4,
+    Sint8x4
 
     /// One unsigned byte (u8). [0, 255] converted to float [0, 1] `f32` in shaders.
-    Unorm8 ,
+    Unorm8
     /// Two unsigned bytes (u8). [0, 255] converted to float [0, 1] `vec2<f32>` in shaders.
-    Unorm8x2,
+    Unorm8x2
     /// Four unsigned bytes (u8). [0, 255] converted to float [0, 1] `vec4<f32>` in shaders.
-    Unorm8x4,
+    Unorm8x4
 
     /// One signed byte (i8). [&minus;127, 127] converted to float [&minus;1, 1] `f32` in shaders.
-    Snorm8,
+    Snorm8
     /// Two signed bytes (i8). [&minus;127, 127] converted to float [&minus;1, 1] `vec2<f32>` in shaders.
-    Snorm8x2,
+    Snorm8x2
     /// Four signed bytes (i8). [&minus;127, 127] converted to float [&minus;1, 1] `vec4<f32>` in shaders.
-    Snorm8x4,
+    Snorm8x4
 
     /// One unsigned short (u16). `u32` in shaders.
-    Uint16,
+    Uint16
     /// Two unsigned shorts (u16). `vec2<u32>` in shaders.
-    Uint16x2,
+    Uint16x2
     /// Four unsigned shorts (u16). `vec4<u32>` in shaders.
-    Uint16x4,
+    Uint16x4
 
     /// One signed short (u16). `i32` in shaders.
-    Sint16,
+    Sint16
     /// Two signed shorts (i16). `vec2<i32>` in shaders.
-    Sint16x2,
+    Sint16x2
     /// Four signed shorts (i16). `vec4<i32>` in shaders.
-    Sint16x4,
+    Sint16x4
 
     /// One unsigned short (u16). [0, 65535] converted to float [0, 1] `f32` in shaders.
-    Unorm16,
+    Unorm16
     /// Two unsigned shorts (u16). [0, 65535] converted to float [0, 1] `vec2<f32>` in shaders.
-    Unorm16x2,
+    Unorm16x2
     /// Four unsigned shorts (u16). [0, 65535] converted to float [0, 1] `vec4<f32>` in shaders.
-    Unorm16x4,
+    Unorm16x4
 
     /// One signed short (i16). [&minus;32767, 32767] converted to float [&minus;1, 1] `f32` in shaders.
-    Snorm16,
+    Snorm16
     /// Two signed shorts (i16). [&minus;32767, 32767] converted to float [&minus;1, 1] `vec2<f32>` in shaders.
-    Snorm16x2,
+    Snorm16x2
     /// Four signed shorts (i16). [&minus;32767, 32767] converted to float [&minus;1, 1] `vec4<f32>` in shaders.
-    Snorm16x4,
+    Snorm16x4
 
     /// One single-precision float (f32). `f32` in shaders.
-    Float32,
+    Float32
     /// Two single-precision floats (f32). `vec2<f32>` in shaders.
-    Float32x2,
+    Float32x2
     /// Three single-precision floats (f32). `vec3<f32>` in shaders.
-    Float32x3,
+    Float32x3
     /// Four single-precision floats (f32). `vec4<f32>` in shaders.
-    Float32x4,
+    Float32x4
 
     /// One unsigned int (u32). `u32` in shaders.
-    Uint32,
+    Uint32
     /// Two unsigned ints (u32). `vec2<u32>` in shaders.
-    Uint32x2,
+    Uint32x2
     /// Four unsigned ints (u32). `vec4<u32>` in shaders.
-    Uint32x4,
+    Uint32x4
 
     /// One signed int (i32). `i32` in shaders.
-    Sint32,
+    Sint32
     /// Two signed ints (i32). `vec2<i32>` in shaders.
-    Sint32x2,
+    Sint32x2
     /// Four signed ints (i32). `vec4<i32>` in shaders.
-    Sint32x4,
+    Sint32x4
 }
 
 enum VertexStepMode {
@@ -210,53 +208,53 @@ enum CullMode {
 /// Texture format for render targets and textures
 enum TextureFormat {
     // --- Standard 8-bit ---
-    R8Unorm,
-    R8Uint,
-    Rg8Unorm,
-    Rgba8Unorm,
-    Rgba8UnormSrgb,
-    Rgba8Uint,
-    Bgra8Unorm,
-    Bgra8UnormSrgb,
+    R8Unorm
+    R8Uint
+    Rg8Unorm
+    Rgba8Unorm
+    Rgba8UnormSrgb
+    Rgba8Uint
+    Bgra8Unorm
+    Bgra8UnormSrgb
 
     // --- High-Precision 16-bit ---
-    R16Float,
-    R16Uint,
-    Rg16Float,
-    Rgba16Float,
-    Rgba16Uint,
+    R16Float
+    R16Uint
+    Rg16Float
+    Rgba16Float
+    Rgba16Uint
 
     // --- Math & Data 32-bit ---
-    R32Float,
-    R32Uint,
-    Rg32Float,
-    Rg32Uint,
-    Rgba32Float,
-    Rgba32Uint,
+    R32Float
+    R32Uint
+    Rg32Float
+    Rg32Uint
+    Rgba32Float
+    Rgba32Uint
 
     // --- Packed 32-bit ---
     /// 11/11/10 bits for RGB.
-    Rg11b10Ufloat,
+    Rg11b10Ufloat
     /// Shared exponent.
-    Rgb9e5Ufloat,
+    Rgb9e5Ufloat
     /// 10 bits per RGB, 2 bits for Alpha.
-    Rgb10a2Unorm,
+    Rgb10a2Unorm
 
     // --- Depth and Stencil  ---
-    Stencil8,
-    Depth16Unorm,
+    Stencil8
+    Depth16Unorm
 
     /// Abstract: Driver picks best 24-bit or 32-bit depth implementation.
-    Depth24Plus,
+    Depth24Plus
 
     /// Abstract: Driver picks best 24/32-bit depth + 8-bit stencil.
-    Depth24PlusStencil8,
+    Depth24PlusStencil8
 
     /// Maximum precision depth. // maybe only use this?
-    Depth32Float,
+    Depth32Float
 
     /// Maximum precision depth + stencil masking.
-    Depth32FloatStencil8,
+    Depth32FloatStencil8
 }
 
 /// Texture usage flags
@@ -264,7 +262,7 @@ enum TextureUsage {
     /// Can be rendered to
     RenderAttachment
     /// Can be sampled in shaders
-    TextureSampling
+    TextureSampling // TODO: Sometimes called TextureBinding, which one is more correct?
     /// Both render target and texture sampling
     RenderAndSample
 }
@@ -293,7 +291,7 @@ struct DrawIndexed {
 
 // should probably not use this?
 struct Draw {
-    index: Range
+    vertex: Range
     instance: Range
 }
 
@@ -335,6 +333,10 @@ struct ColorAttachment {
     should_clear: Bool  // TODO: Maybe optional? or is it better to have a bool?
 }
 
+/// Builder for recording draw commands for a render pass.
+///
+/// Configure attachments, then record state changes and draw calls in order.
+/// Submit the finished pass with [`add_pass`].
 struct RenderPass {
     entries: Vec<Entry; 128>
     /// Color attachments to render to. If empty, renders to screen
@@ -345,50 +347,85 @@ struct RenderPass {
 
 
 impl RenderPass {
-    fn set_bind_group(mut self, set_group: SetBindGroup) {
-        self.entries.push( SetBindGroup(set_group) )
-    }
+    // === Attachments ===
 
-    fn set_index_buffer(mut self, index_buffer: SetIndexBuffer) {
-        self.entries.push( SetIndexBuffer(index_buffer) )
-    }
-
-    fn set_vertex_buffer(mut self, vertex_buffer: SetVertexBuffer) {
-        self.entries.push( SetVertexBuffer(vertex_buffer) )
-    }
-
-    fn draw(mut self, draw: Draw) {
-        self.entries.push( Draw(draw) )
-    }
-
-    fn draw_indexed(mut self, draw_indexed: DrawIndexed)  {
-        self.entries.push( DrawIndexed(draw_indexed) )
-    }
-
-    fn set_pipeline(mut self, handle: RenderPipelineHandle) {
-        self.entries.push( SetPipeline(handle) )
-    }
-
-    /// If no color attachments are set, defaults to rendering to the screen
+    /// Adds a [`ColorAttachment`] to render into.
+    ///
+    /// If no color attachments are set, the pass renders to the screen.
     fn add_color_attachment(mut self, attachment: ColorAttachment) {
         self.color_attachments.push(attachment)
     }
 
-    /// Sets the depth attachment for depth testing
+    /// Sets the depth attachment for depth testing using a [`TextureViewHandle`].
     fn set_depth_attachment(mut self, depth_view: TextureViewHandle) {
         self.depth_attachment = depth_view
     }
 
-    fn set_scissor_rect(mut self, rect: ScissorRect) {
-        self.entries.push( SetScissorRect(rect) )
+    // === Pipeline State ===
+
+    /// Sets the active [`RenderPipelineHandle`] for upcoming draw calls.
+    fn set_pipeline(mut self, pipeline: RenderPipelineHandle) {
+        self.entries.push( SetPipeline(pipeline) )
     }
 
+    /// Sets the [`Viewport`] for future draw calls.
     fn set_viewport(mut self, viewport: Viewport) {
         self.entries.push( SetViewport(viewport) )
     }
 
-    fn set_stencil_reference(mut self, reference: StencilReference) {
-        self.entries.push( SetStencilReference(reference) )
+    /// Clips rendering to a [`ScissorRect`].
+    fn set_scissor_rect(mut self, rect: ScissorRect) {
+        self.entries.push( SetScissorRect(rect) )
+    }
+
+    /// Sets the stencil reference value for stencil testing.
+    fn set_stencil_reference(mut self, reference_value: Int) {
+        self.entries.push( SetStencilReference( { value: reference_value } ) )
+    }
+
+    // === Buffers & Resources ===
+
+    /// Binds a [`BindGroupHandle`] at `group_index` for future draw calls.
+    ///
+    /// `group_index` is the bind group slot, the `@group(N)` in WGSL and the
+    /// position of that group's layout in the array passed to [`create_pipeline_layout`].
+    // TODO: index should be U32,
+    fn set_bind_group(mut self, group_index: Int, bind_group: BindGroupHandle) {
+        self.entries.push( SetBindGroup( { index: group_index, group: bind_group } ) )
+    }
+
+    /// Sets the [`BufferHandle`] at vertex buffer slot.
+    ///
+    /// `slot` is the index of the [`VertexBufferLayout`] in
+    /// [`create_render_pipeline`].
+    fn set_vertex_buffer(mut self, slot: Int, vertex_buffer: BufferHandle) {
+        self.entries.push( SetVertexBuffer( { slot: slot, buffer: vertex_buffer } ) )
+    }
+
+    /// Sets the index [`BufferHandle`] for indexed drawing.
+    ///
+    /// Only buffers created with [`create_index_buffer_u16`] are supported.
+    // TODO: Only one index buffer supported now (U16)
+    fn set_index_buffer(mut self, index_buffer: BufferHandle) {
+        self.entries.push( SetIndexBuffer( { buffer: index_buffer } ) )
+    }
+
+    // === Draw ===
+
+    /// Draws vertices without an index buffer. Prefer [`draw_indexed`] if possible.
+    ///
+    /// `vertex_range` selects vertices by [`Range`] (start and count).
+    /// `instance_range` selects instances the same way. Use `count: 1` for a single draw.
+    fn draw(mut self, vertex_range: Range, instance_range: Range ) {
+        self.entries.push( Draw( { vertex: vertex_range, instance: instance_range } ) )
+    }
+
+    /// Draws indexed geometry using the index buffer set by [`RenderPass::set_index_buffer`].
+    ///
+    /// `index_range` selects indices by [`Range`] (start and ocunt).
+    /// `instance_range` selects instances the same way. Use `count: 1` for a single draw.
+    fn draw_indexed(mut self, index_range: Range, instance_range: Range)  {
+        self.entries.push( DrawIndexed( { index: index_range, instance: instance_range } ) )
     }
 }
 
@@ -412,7 +449,9 @@ enum BindingType {
     StorageTexture
 }
 
+/// One resource slot in a bind group layout.
 struct BindGroupLayoutEntry {
+    /// Binding index within the group. Matches `@binding(N)` in WGSL.
     binding: Int
     // TODO: visibility: ShaderStages
     ty: BindingType
@@ -420,7 +459,8 @@ struct BindGroupLayoutEntry {
 
 struct VertexAttribute {
     offset: Int
-    location: Int
+    /// Vertex input shader location. Matches `@location(N)` in the vertex shader.
+    location: Int // TODO: maybe shader_location. or is that too long?
     format: VertexFormat
 }
 
@@ -432,10 +472,26 @@ struct VertexBufferLayout {
 }
 
 impl BufferHandle {
-    external 911 fn write(mut self, buffer: Any)
+    /// Writes all elements of `data` into the GPU buffer starting at element `0`.
+    external 911 fn write(mut self, data: Any)
 
-    /// Write data to a portion of the buffer at a specific offset
-    external 915 fn write_with(mut self, offset: Int, buffer: Any)
+    /// Writes all elements of `data` into the GPU buffer starting at `dest_element_offset`.
+    ///
+    /// (for example one element per entry in `Block<Vertex; N>`).
+    /// For a sub-range, use [`BufferHandle::write_at`].
+    external 915 fn write_with(mut self, dest_element_offset: Int, data: Any)
+
+    /// Writes `element_count` elements of `data` into the GPU buffer.
+    ///
+    /// Copies elements `[data_element_offset .. data_element_offset + element_count)` from `data`
+    /// into the GPU buffer starting at element `dest_element_offset`.
+    external 917 fn write_at(
+        mut self,
+        dest_element_offset: Int,
+        data: Any,
+        data_element_offset: Int,
+        element_count: Int
+    )
 }
 
 
@@ -446,6 +502,10 @@ external 901 fn create_vertex_buffer(buffer: Any, description: String) -> Buffer
 /// Creates an empty GPU buffer without initial data.
 external 914 fn create_buffer(size: Int, usage: BufferUsage, description: String) -> BufferHandle
 
+/// Creates a bind group instance for a layout from [`create_bind_group_layout`].
+///
+/// `entries` are assigned to `@binding(0)`, `@binding(1)`, … in array order.
+/// Keep that order aligned with the layout entries and their [`BindGroupLayoutEntry::binding`] values.
 external 902 fn create_bind_group(bind_group_layout: BindGroupLayoutHandle, entries: [BindGroupEntry], description: String) -> BindGroupHandle
 external 903 fn create_sampler(config: SamplerConfig, description: String) -> SamplerHandle
 
@@ -459,7 +519,12 @@ external 913 fn create_texture_view(texture: TextureHandle, description: String)
 /// Updates texture data without recreating the whole texture
 external 916 fn write_texture(texture: TextureHandle, data: Any, width: Int, height: Int)
 
+/// Describes the resources at each [`BindGroupLayoutEntry::binding`] within one bind group.
 external 906 fn create_bind_group_layout(entries: [BindGroupLayoutEntry], description: String) -> BindGroupLayoutHandle
+
+/// Creates a pipeline layout from bind group layouts in group-index order.
+///
+/// The first layout is group index `0` (`@group(0)`), the second is `1`, and so on.
 external 907 fn create_pipeline_layout(groups: [BindGroupLayoutHandle], description: String) -> PipelineLayoutHandle
 
 /// Creates a render pipeline
