@@ -6,9 +6,17 @@
 
 // Do not modify this file!
 
-#[extensions("font")]
-struct BmFontTag {}
-type BmFontRes = Res<BmFontTag>
+#[extensions("fnt.xml")]
+struct BmFontTagXml {}
+type BmFontResXml = Res<BmFontTagXml>
+
+#[extensions("fnt.txt")]
+struct BmFontTagTxt {}
+type BmFontResTxt = Res<BmFontTagTxt>
+
+#[extensions("fnt.bin")]
+struct BmFontTagBin {}
+type BmFontResBin = Res<BmFontTagBin>
 
 const GLYPH_COUNT = 256
 
@@ -35,7 +43,17 @@ struct BmFont {
     info: FontInfo
 }
 
-impl BmFontRes {
+impl BmFontResXml {
     /// Load the resource file into a `BmFont`
     external 6000 fn load(self) -> BmFont
+}
+
+impl BmFontResTxt {
+    /// Load the resource file (text format) into a `BmFont`
+    external 6001 fn load(self) -> BmFont
+}
+
+impl BmFontResBin {
+    /// Load the resource file (binary format) into a `BmFont`
+    external 6002 fn load(self) -> BmFont
 }
