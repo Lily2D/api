@@ -1,5 +1,5 @@
 name: lily
-version: "0.3.32"
+version: "0.3.33"
 description: built in API for Lily2D
 edition: 2026
 type: :lib
