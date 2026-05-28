@@ -333,12 +333,14 @@ struct ColorAttachment {
     should_clear: Bool  // TODO: Maybe optional? or is it better to have a bool?
 }
 
+const MAX_RENDER_PASS_ENTRIES = 2048
+
 /// Builder for recording draw commands for a render pass.
 ///
 /// Configure attachments, then record state changes and draw calls in order.
 /// Submit the finished pass with [`add_pass`].
 struct RenderPass {
-    entries: Vec<Entry; 128>
+    entries: Vec<Entry; MAX_RENDER_PASS_ENTRIES>
     /// Color attachments to render to. If empty, renders to screen
     color_attachments: Vec<ColorAttachment; 8> // For now, do not increase this above 8. It is the same as the guarantee of WebGPU.
     /// Optional depth attachment. Set to -1 for none. TODO: Should probably be proper handle or optional?
