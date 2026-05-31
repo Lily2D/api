@@ -494,6 +494,22 @@ impl BufferHandle {
         data_element_offset: Int,
         element_count: Int
     )
+
+    /// Releases the underlying GPU buffer handle.
+    /// After calling this, the handle must not be used again.
+    external 921 fn drop(mut self)
+}
+
+impl TextureHandle {
+    /// Releases the underlying GPU texture.
+    /// After calling this, the handle must not be used again.
+    external 918 fn drop(mut self)
+}
+
+impl TextureViewHandle {
+    /// Releases this texture view handle.
+    /// After calling this, the handle must not be used again.
+    external 919 fn drop(mut self)
 }
 
 
