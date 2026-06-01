@@ -15,23 +15,6 @@ type Shader = Res<ShaderTag>
 struct ImageTag {}
 type Image = Res<ImageTag>
 
-enum LayoutEntryType {
-    Buffer
-    Sample
-    Texture
-    StorageTexture
-    External // TODO: What is external?
-}
-
-struct LayoutEntry {
-}
-
-// TODO: The layout is almost like setting a struct. Should probably be struct like definition in swamp
-struct Layout {
-    entries: Vec<LayoutEntry; 32>
-}
-
-// TODO: Support Swamp range type directly?
 struct Range {
     start: Int
     count: Int
@@ -73,84 +56,43 @@ type ShaderModuleHandle = Int
 
 /// Vertex attribute format
 enum VertexFormat {
-    /// One unsigned byte (u8). `u32` in shaders.
-    Uint8
-    /// Two unsigned bytes (u8). `vec2<u32>` in shaders.
-    Uint8x2
-    /// Four unsigned bytes (u8). `vec4<u32>` in shaders.
-    Uint8x4
-
-    /// One signed byte (i8). `i32` in shaders.
-    Sint8
-    /// Two signed bytes (i8). `vec2<i32>` in shaders.
-    Sint8x2
-    /// Four signed bytes (i8). `vec4<i32>` in shaders.
-    Sint8x4
-
-    /// One unsigned byte (u8). [0, 255] converted to float [0, 1] `f32` in shaders.
-    Unorm8
-    /// Two unsigned bytes (u8). [0, 255] converted to float [0, 1] `vec2<f32>` in shaders.
-    Unorm8x2
-    /// Four unsigned bytes (u8). [0, 255] converted to float [0, 1] `vec4<f32>` in shaders.
+    // Core
     Unorm8x4
-
-    /// One signed byte (i8). [&minus;127, 127] converted to float [&minus;1, 1] `f32` in shaders.
-    Snorm8
-    /// Two signed bytes (i8). [&minus;127, 127] converted to float [&minus;1, 1] `vec2<f32>` in shaders.
-    Snorm8x2
-    /// Four signed bytes (i8). [&minus;127, 127] converted to float [&minus;1, 1] `vec4<f32>` in shaders.
-    Snorm8x4
-
-    /// One unsigned short (u16). `u32` in shaders.
-    Uint16
-    /// Two unsigned shorts (u16). `vec2<u32>` in shaders.
-    Uint16x2
-    /// Four unsigned shorts (u16). `vec4<u32>` in shaders.
     Uint16x4
-
-    /// One signed short (u16). `i32` in shaders.
-    Sint16
-    /// Two signed shorts (i16). `vec2<i32>` in shaders.
-    Sint16x2
-    /// Four signed shorts (i16). `vec4<i32>` in shaders.
-    Sint16x4
-
-    /// One unsigned short (u16). [0, 65535] converted to float [0, 1] `f32` in shaders.
-    Unorm16
-    /// Two unsigned shorts (u16). [0, 65535] converted to float [0, 1] `vec2<f32>` in shaders.
     Unorm16x2
-    /// Four unsigned shorts (u16). [0, 65535] converted to float [0, 1] `vec4<f32>` in shaders.
     Unorm16x4
-
-    /// One signed short (i16). [&minus;32767, 32767] converted to float [&minus;1, 1] `f32` in shaders.
-    Snorm16
-    /// Two signed shorts (i16). [&minus;32767, 32767] converted to float [&minus;1, 1] `vec2<f32>` in shaders.
-    Snorm16x2
-    /// Four signed shorts (i16). [&minus;32767, 32767] converted to float [&minus;1, 1] `vec4<f32>` in shaders.
-    Snorm16x4
-
-    /// One single-precision float (f32). `f32` in shaders.
-    Float32
-    /// Two single-precision floats (f32). `vec2<f32>` in shaders.
     Float32x2
-    /// Three single-precision floats (f32). `vec3<f32>` in shaders.
     Float32x3
-    /// Four single-precision floats (f32). `vec4<f32>` in shaders.
     Float32x4
-
-    /// One unsigned int (u32). `u32` in shaders.
     Uint32
-    /// Two unsigned ints (u32). `vec2<u32>` in shaders.
-    Uint32x2
-    /// Four unsigned ints (u32). `vec4<u32>` in shaders.
-    Uint32x4
 
-    /// One signed int (i32). `i32` in shaders.
-    Sint32
-    /// Two signed ints (i32). `vec2<i32>` in shaders.
-    Sint32x2
-    /// Four signed ints (i32). `vec4<i32>` in shaders.
-    Sint32x4
+    // TODO: Investigate if these are used, and if so, for what?
+    // Uint8
+    // Uint8x2
+    // Uint8x4
+    // Sint8
+    // Sint8x2
+    // Sint8x4
+    // Unorm8
+    // Unorm8x2
+    // Snorm8
+    // Snorm8x2
+    // Snorm8x4
+    // Uint16
+    // Uint16x2
+    // Sint16
+    // Sint16x2
+    // Sint16x4
+    // Unorm16
+    // Snorm16
+    // Snorm16x2
+    // Snorm16x4
+    // Float32
+    // Uint32x2
+    // Uint32x4
+    // Sint32
+    // Sint32x2
+    // Sint32x4
 }
 
 enum VertexStepMode {
@@ -205,56 +147,64 @@ enum CullMode {
     Back
 }
 
+/// vertices into geometry
+enum PrimitiveTopology {
+    // For particles?
+    PointList
+    LineList
+    LineStrip
+    // Very useful for 2D and Quads.
+    TriangleList
+    TriangleStrip
+}
+
+/// Comparison function used for depth testing
+enum CompareFunction {
+    Less
+    LessEqual
+    Greater
+    Always
+
+    // TODO: Investigate if these are used, and if so, for what?
+    // Never
+    // Equal
+    // NotEqual
+    // GreaterEqual
+}
+
+
 /// Texture format for render targets and textures
 enum TextureFormat {
-    // --- Standard 8-bit ---
     R8Unorm
-    R8Uint
-    Rg8Unorm
     Rgba8Unorm
     Rgba8UnormSrgb
-    Rgba8Uint
     Bgra8Unorm
     Bgra8UnormSrgb
-
-    // --- High-Precision 16-bit ---
-    R16Float
-    R16Uint
-    Rg16Float
     Rgba16Float
-    Rgba16Uint
-
-    // --- Math & Data 32-bit ---
-    R32Float
     R32Uint
-    Rg32Float
-    Rg32Uint
-    Rgba32Float
-    Rgba32Uint
-
-    // --- Packed 32-bit ---
-    /// 11/11/10 bits for RGB.
-    Rg11b10Ufloat
-    /// Shared exponent.
-    Rgb9e5Ufloat
-    /// 10 bits per RGB, 2 bits for Alpha.
-    Rgb10a2Unorm
-
-    // --- Depth and Stencil  ---
-    Stencil8
-    Depth16Unorm
-
-    /// Abstract: Driver picks best 24-bit or 32-bit depth implementation.
     Depth24Plus
-
-    /// Abstract: Driver picks best 24/32-bit depth + 8-bit stencil.
     Depth24PlusStencil8
-
-    /// Maximum precision depth. // maybe only use this?
     Depth32Float
 
-    /// Maximum precision depth + stencil masking.
-    Depth32FloatStencil8
+    // TODO: Investigate if these are used, and if so, for what?
+    // R8Uint
+    // Rg8Unorm
+    // Rgba8Uint
+    // R16Float
+    // R16Uint
+    // Rg16Float
+    // Rgba16Uint
+    // R32Float
+    // Rg32Float
+    // Rg32Uint
+    // Rgba32Float
+    // Rgba32Uint
+    // Rg11b10Ufloat
+    // Rgb9e5Ufloat
+    // Rgb10a2Unorm
+    // Stencil8
+    // Depth16Unorm
+    // Depth32FloatStencil8
 }
 
 /// Texture usage flags
@@ -277,6 +227,20 @@ enum BufferUsage {
     Uniform
     /// For storage buffers
     Storage
+}
+
+/// Options for creating render pipeline.
+struct RenderPipelineOptions {
+    blend_mode: BlendMode
+    cull_mode: CullMode
+    enable_depth: Bool
+    topology: PrimitiveTopology
+    depth_format: TextureFormat
+    depth_write_enabled: Bool
+    depth_compare: CompareFunction
+    depth_bias_constant: Int
+    depth_bias_slope_scale: F32
+    depth_bias_clamp: F32
 }
 
 struct SetBindGroup {
@@ -345,6 +309,11 @@ struct RenderPass {
     color_attachments: Vec<ColorAttachment; 8> // For now, do not increase this above 8. It is the same as the guarantee of WebGPU.
     /// Optional depth attachment. Set to -1 for none. TODO: Should probably be proper handle or optional?
     depth_attachment: Int
+    /// Clear depth value when `depth_should_clear` is true
+    depth_clear_value: F32
+    depth_should_clear: Bool
+    /// If true, store depth results after the pass
+    depth_store: Bool
 }
 
 
@@ -361,6 +330,16 @@ impl RenderPass {
     /// Sets the depth attachment for depth testing using a [`TextureViewHandle`].
     fn set_depth_attachment(mut self, depth_view: TextureViewHandle) {
         self.depth_attachment = depth_view
+        self.depth_should_clear = true
+        self.depth_clear_value = 1.0
+        self.depth_store = true
+    }
+
+    /// Configures depth load/store.
+    fn set_depth_ops(mut self, should_clear: Bool, clear_value: F32, store: Bool) {
+        self.depth_should_clear = should_clear
+        self.depth_clear_value = clear_value
+        self.depth_store = store
     }
 
     // === Pipeline State ===
@@ -449,6 +428,7 @@ enum BindingType {
     Sampler
     Texture
     StorageTexture
+    // TODO: External?
 }
 
 /// One resource slot in a bind group layout.
@@ -501,6 +481,9 @@ impl BufferHandle {
 }
 
 impl TextureHandle {
+    /// Updates texture data without recreating the whole texture
+    external 916 fn write(self, data: Any, width: Int, height: Int)
+
     /// Releases the underlying GPU texture.
     /// After calling this, the handle must not be used again.
     external 918 fn drop(mut self)
@@ -534,8 +517,6 @@ external 920 fn create_texture_png(image: Image, format: TextureFormat, usage: T
 /// Creates a view into a texture for rendering or sampling
 external 913 fn create_texture_view(texture: TextureHandle, description: String) -> TextureViewHandle
 
-/// Updates texture data without recreating the whole texture
-external 916 fn write_texture(texture: TextureHandle, data: Any, width: Int, height: Int)
 
 /// Describes the resources at each [`BindGroupLayoutEntry::binding`] within one bind group.
 external 906 fn create_bind_group_layout(entries: [BindGroupLayoutEntry], description: String) -> BindGroupLayoutHandle
@@ -545,8 +526,11 @@ external 906 fn create_bind_group_layout(entries: [BindGroupLayoutEntry], descri
 /// The first layout is group index `0` (`@group(0)`), the second is `1`, and so on.
 external 907 fn create_pipeline_layout(groups: [BindGroupLayoutHandle], description: String) -> PipelineLayoutHandle
 
-/// Creates a render pipeline
-external 908 fn create_render_pipeline(layout: PipelineLayoutHandle, buffers: [VertexBufferLayout], shader_module: Shader, blend_mode: BlendMode, cull_mode: CullMode, enable_depth: Bool, description: String) -> RenderPipelineHandle
+/// Creates a render pipeline targeting the current surface (swapchain) format.
+external 908 fn create_render_pipeline(layout: PipelineLayoutHandle, buffers: [VertexBufferLayout], shader_module: Shader, options: RenderPipelineOptions, description: String) -> RenderPipelineHandle
+
+/// Creates a render pipeline targeting an explicit color format (for offscreen pipelines).
+external 992 fn create_render_pipeline_with_color_format(layout: PipelineLayoutHandle, buffers: [VertexBufferLayout], shader_module: Shader, color_format: TextureFormat, options: RenderPipelineOptions, description: String) -> RenderPipelineHandle
 
 /// Submits a render pass for execution
 external 905 fn add_pass(pass: RenderPass, description: String)
