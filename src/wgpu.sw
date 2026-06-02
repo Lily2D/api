@@ -55,44 +55,64 @@ type RenderPipelineHandle = Int
 type ShaderModuleHandle = Int
 
 /// Vertex attribute format
+///
+/// The list is intended to be a minimal list of things that are broadly
+/// supported in Metal, Vulkan, and DX12.
+///
+/// It should also not include formats that cannot (or I don't want to) be supported in Swamp,
+/// such as half-floats (float16) and 64-bit formats (Swamp is 32-bit).
+///
+/// And no obscure packed and normalized formats (e.g. unorm_10_10_10_2).
+///
+/// `Unorm*` expands to floats in `[0.0, 1.0]`, and `Snorm*` expands to floats in `[-1.0, 1.0]`.
 enum VertexFormat {
-    // Core
-    Unorm8x4
-    Uint16x4
-    Unorm16x2
-    Unorm16x4
-    Float32x2
-    Float32x3
-    Float32x4
-    Uint32
+    // 8 bits
+    Uint8
+    Sint8
+    Unorm8
+    Snorm8
 
-    // TODO: Investigate if these are used, and if so, for what?
-    // Uint8
-    // Uint8x2
-    // Uint8x4
-    // Sint8
-    // Sint8x2
-    // Sint8x4
-    // Unorm8
-    // Unorm8x2
-    // Snorm8
-    // Snorm8x2
-    // Snorm8x4
-    // Uint16
-    // Uint16x2
-    // Sint16
-    // Sint16x2
-    // Sint16x4
-    // Unorm16
-    // Snorm16
-    // Snorm16x2
-    // Snorm16x4
-    // Float32
-    // Uint32x2
-    // Uint32x4
-    // Sint32
-    // Sint32x2
-    // Sint32x4
+    // 16 bits
+    Uint8x2
+    Sint8x2
+    Unorm8x2
+    Snorm8x2
+    Uint16
+    Sint16
+    Unorm16
+    Snorm16
+
+    // 32 bits
+    Uint8x4
+    Sint8x4
+    Unorm8x4
+    Snorm8x4
+    Uint16x2
+    Sint16x2
+    Unorm16x2
+    Snorm16x2
+    Float32
+    Uint32
+    Sint32
+
+    // 64 bits
+    Uint16x4
+    Sint16x4
+    Unorm16x4
+    Snorm16x4
+    Float32x2
+    Uint32x2
+    Sint32x2
+
+    // 96 bits
+    Float32x3
+    Uint32x3
+    Sint32x3
+
+    // 128 bits
+    Float32x4
+    Uint32x4
+    Sint32x4
 }
 
 enum VertexStepMode {
@@ -173,48 +193,37 @@ enum CompareFunction {
 }
 
 
-/// Texture format for render targets and textures
-enum TextureFormat {
+/// Texture format for textures that are sampled (read).
+enum SampledTextureFormat {
     R8Unorm
     Rgba8Unorm
     Rgba8UnormSrgb
-    Bgra8Unorm
-    Bgra8UnormSrgb
+    Rgba16Float
+}
+
+/// Texture format for color attachments.
+enum RenderTextureFormat {
+    R8Unorm
+    Rgba8Unorm
+    Rgba8UnormSrgb
     Rgba16Float
     R32Uint
+}
+
+/// Texture format for storage textures.
+enum StorageTextureFormat {
+    Rgba8Unorm // can be *either* read or write
+    Rgba16Float // can be *either* read or write
+    R32Uint // can be both read and write
+}
+
+/// Texture format for depth/stencil attachments.
+///
+/// `Depth24Plus` is guaranteed to be at least 24 bits
+enum DepthTextureFormat {
     Depth24Plus
     Depth24PlusStencil8
     Depth32Float
-
-    // TODO: Investigate if these are used, and if so, for what?
-    // R8Uint
-    // Rg8Unorm
-    // Rgba8Uint
-    // R16Float
-    // R16Uint
-    // Rg16Float
-    // Rgba16Uint
-    // R32Float
-    // Rg32Float
-    // Rg32Uint
-    // Rgba32Float
-    // Rgba32Uint
-    // Rg11b10Ufloat
-    // Rgb9e5Ufloat
-    // Rgb10a2Unorm
-    // Stencil8
-    // Depth16Unorm
-    // Depth32FloatStencil8
-}
-
-/// Texture usage flags
-enum TextureUsage {
-    /// Can be rendered to
-    RenderAttachment
-    /// Can be sampled in shaders
-    TextureSampling // TODO: Sometimes called TextureBinding, which one is more correct?
-    /// Both render target and texture sampling
-    RenderAndSample
 }
 
 /// Buffer usage flags
@@ -235,7 +244,7 @@ struct RenderPipelineOptions {
     cull_mode: CullMode
     enable_depth: Bool
     topology: PrimitiveTopology
-    depth_format: TextureFormat
+    depth_format: DepthTextureFormat
     depth_write_enabled: Bool
     depth_compare: CompareFunction
     depth_bias_constant: Int
@@ -328,7 +337,7 @@ impl RenderPass {
     }
 
     /// Sets the depth attachment for depth testing using a [`TextureViewHandle`].
-    fn set_depth_attachment(mut self, depth_view: TextureViewHandle) {
+    fn set_depth_attachment(mut self, depth_view: TextureViewHandle) { // TODO: should be DepthViewHandle in the future
         self.depth_attachment = depth_view
         self.depth_should_clear = true
         self.depth_clear_value = 1.0
@@ -423,26 +432,47 @@ enum BufferBindingType {
     Storage { read_only: Bool }
 }
 
+/// Access mode for storage texture bindings
+enum StorageTextureAccess {
+    WriteOnly
+    ReadOnly
+    ReadWrite
+}
+
+/// Configuration for a storage texture binding in a bind group layout.
+///
+/// TODO: Texture bindings use D2 dimensions only for now. @catnipped will determine when cube maps, texture arrays, or 3D volumes are needed.
+struct StorageTextureBindingType {
+    access: StorageTextureAccess
+    format: StorageTextureFormat
+}
+
+/// Resource type for one slot in a bind group layout.
+///
+/// TODO: Texture bindings use D2 dimensions only for now. @catnipped will determine when cube maps, texture arrays, or 3D volumes are needed.
 enum BindingType {
     Buffer BufferBindingType
     Sampler
     Texture
-    StorageTexture
-    // TODO: External?
+    StorageTexture StorageTextureBindingType
+    // `External` is by design NOT supported (likely for video processing, camera, compositors that are tied to the OS?)
 }
 
 /// One resource slot in a bind group layout.
 struct BindGroupLayoutEntry {
     /// Binding index within the group. Matches `@binding(N)` in WGSL.
+    ///
+    /// Entries must use bindings `0`, `1`, `2`, in array order.
     binding: Int
-    // TODO: visibility: ShaderStages
     ty: BindingType
+
+    // TODO: visibility: ShaderStages is useful for vertex sampling (I guess terrain generators and similar?)
 }
 
 struct VertexAttribute {
     offset: Int
     /// Vertex input shader location. Matches `@location(N)` in the vertex shader.
-    location: Int // TODO: maybe shader_location. or is that too long?
+    location: Int // TODO: maybe call it shader_location. or is that too long?
     format: VertexFormat
 }
 
@@ -495,6 +525,36 @@ impl TextureViewHandle {
     external 919 fn drop(mut self)
 }
 
+impl BindGroupHandle {
+    /// Releases the underlying GPU bind group handle.
+    /// After calling this, the handle must not be used again.
+    external 922 fn drop(mut self)
+}
+
+impl BindGroupLayoutHandle {
+    /// Releases the underlying GPU bind group layout handle.
+    /// After calling this, the handle must not be used again.
+    external 923 fn drop(mut self)
+}
+
+impl PipelineLayoutHandle {
+    /// Releases the underlying GPU pipeline layout handle.
+    /// After calling this, the handle must not be used again.
+    external 924 fn drop(mut self)
+}
+
+impl RenderPipelineHandle {
+    /// Releases the underlying GPU render pipeline handle.
+    /// After calling this, the handle must not be used again.
+    external 925 fn drop(mut self)
+}
+
+impl SamplerHandle {
+    /// Releases the underlying GPU sampler handle.
+    /// After calling this, the handle must not be used again.
+    external 926 fn drop(mut self)
+}
+
 
 // Internal
 external 900 fn create_index_buffer_u16(buffer: Any, description: String) -> BufferHandle
@@ -506,17 +566,34 @@ external 914 fn create_buffer(size: Int, usage: BufferUsage, description: String
 /// Creates a bind group instance for a layout from [`create_bind_group_layout`].
 ///
 /// `entries` are assigned to `@binding(0)`, `@binding(1)`, … in array order.
-/// Keep that order aligned with the layout entries and their [`BindGroupLayoutEntry::binding`] values.
+/// The layout must declare bindings in that same sequential order.
 external 902 fn create_bind_group(bind_group_layout: BindGroupLayoutHandle, entries: [BindGroupEntry], description: String) -> BindGroupHandle
 external 903 fn create_sampler(config: SamplerConfig, description: String) -> SamplerHandle
 
-/// Creates a texture that can be used as a render target or for sampling
-external 912 fn create_texture(width: Int, height: Int, format: TextureFormat, usage: TextureUsage, description: String) -> TextureHandle
-external 920 fn create_texture_png(image: Image, format: TextureFormat, usage: TextureUsage, description: String) -> TextureHandle
+/// Creates an empty texture that can be sampled (read).
+external 927 fn create_sampled_texture(width: Int, height: Int, format: SampledTextureFormat, description: String) -> TextureHandle
+
+/// Creates an empty texture that can be used as a color render attachment.
+external 912 fn create_render_texture(width: Int, height: Int, format: RenderTextureFormat, description: String) -> TextureHandle
+
+/// Creates an empty texture that can be both rendered to (write) and sampled (read).
+external 928 fn create_render_sampled_texture(width: Int, height: Int, format: SampledTextureFormat, description: String) -> TextureHandle
+
+/// Creates an empty texture that can be used as a storage texture.
+external 931 fn create_storage_texture(width: Int, height: Int, format: StorageTextureFormat, description: String) -> TextureHandle
+
+/// Creates an empty texture that can be used as a depth/stencil attachment.
+// TODO: Should return a specific DepthTextureHandle in the future
+external 929 fn create_depth_texture(width: Int, height: Int, format: DepthTextureFormat, description: String) -> TextureHandle
+
+// Creates a sampled texture from a png. can only be sampled (read).
+external 920 fn create_sampled_texture_png(image: Image, format: SampledTextureFormat, description: String) -> TextureHandle
+
+// Creates a sampled texture from a png. can only be sampled (read) and rendered to (write). you usually want to use `create_sampled_texture_png`
+external 930 fn create_render_sampled_texture_png(image: Image, format: SampledTextureFormat, description: String) -> TextureHandle
 
 /// Creates a view into a texture for rendering or sampling
 external 913 fn create_texture_view(texture: TextureHandle, description: String) -> TextureViewHandle
-
 
 /// Describes the resources at each [`BindGroupLayoutEntry::binding`] within one bind group.
 external 906 fn create_bind_group_layout(entries: [BindGroupLayoutEntry], description: String) -> BindGroupLayoutHandle
@@ -530,7 +607,7 @@ external 907 fn create_pipeline_layout(groups: [BindGroupLayoutHandle], descript
 external 908 fn create_render_pipeline(layout: PipelineLayoutHandle, buffers: [VertexBufferLayout], shader_module: Shader, options: RenderPipelineOptions, description: String) -> RenderPipelineHandle
 
 /// Creates a render pipeline targeting an explicit color format (for offscreen pipelines).
-external 992 fn create_render_pipeline_with_color_format(layout: PipelineLayoutHandle, buffers: [VertexBufferLayout], shader_module: Shader, color_format: TextureFormat, options: RenderPipelineOptions, description: String) -> RenderPipelineHandle
+external 992 fn create_render_pipeline_with_color_format(layout: PipelineLayoutHandle, buffers: [VertexBufferLayout], shader_module: Shader, color_format: RenderTextureFormat, options: RenderPipelineOptions, description: String) -> RenderPipelineHandle
 
 /// Submits a render pass for execution
 external 905 fn add_pass(pass: RenderPass, description: String)
