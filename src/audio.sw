@@ -58,9 +58,13 @@ struct Adsr {
 /// - adsr: Envelope used when the voice is triggered.
 ///
 /// - root_note: Natural pitch of the source sample.
+///
+/// - gate_duration: Optional auto-release time in milliseconds. `0` keeps the
+///   voice held until an explicit `note_off`.
 struct SoundDefinition {
     adsr: Adsr
     root_note: Note
+    gate_duration: Int
 }
 
 // === Resource setup and streaming ===
@@ -94,6 +98,9 @@ external 12017 fn load_wav_stereo(resource_id: SoundId, sound: SoundDefinition)
 ///
 /// Equivalent to note_on with sound.root_note.
 external 12018 fn trig(id: Voice, resource_id: SoundId, volume: Float)
+
+/// Trigger a sound at its root note and rely on its gate duration for release.
+external 12032 fn one_shot(id: Voice, resource_id: SoundId, volume: Float)
 
 /// Start playback at a specific note.
 /// Pitch is transposed relative to sound.root_note.
