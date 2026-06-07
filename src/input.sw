@@ -1,6 +1,8 @@
 //! # Input API for Lily2D
 //!
-//! Input abstraction for Gamepad, Keyboard and Mouse. Support for Steam Input.
+//! Input abstraction for Gamepad, Keyboard and Mouse. Will support Steam Input in the future.
+
+
 
 // DO NOT MODIFY THIS FILE!
 

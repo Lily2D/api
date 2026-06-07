@@ -2,6 +2,9 @@
 //!
 //! Types that are common to refer to, `Vec2f`, `Vec4f` and `Mat4f`
 //!
+
+#![api]
+
 struct Vec2f {
     x: F32
     y: F32
