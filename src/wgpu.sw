@@ -169,7 +169,6 @@ enum CullMode {
 
 /// vertices into geometry
 enum PrimitiveTopology {
-    // For particles?
     PointList
     LineList
     LineStrip
@@ -180,16 +179,14 @@ enum PrimitiveTopology {
 
 /// Comparison function used for depth testing
 enum CompareFunction {
+    Never
     Less
     LessEqual
     Greater
+    GreaterEqual
     Always
 
-    // TODO: Investigate if these are used, and if so, for what?
-    // Never
-    // Equal
-    // NotEqual
-    // GreaterEqual
+    // NOTE: Do not support Equal, and NotEqual. They have performance problems as well as stability problems
 }
 
 
@@ -458,17 +455,6 @@ enum BindingType {
     // `External` is by design NOT supported (likely for video processing, camera, compositors that are tied to the OS?)
 }
 
-/// One resource slot in a bind group layout.
-struct BindGroupLayoutEntry {
-    /// Binding index within the group. Matches `@binding(N)` in WGSL.
-    ///
-    /// Entries must use bindings `0`, `1`, `2`, in array order.
-    binding: Int
-    ty: BindingType
-
-    // TODO: visibility: ShaderStages is useful for vertex sampling (I guess terrain generators and similar?)
-}
-
 struct VertexAttribute {
     offset: Int
     /// Vertex input shader location. Matches `@location(N)` in the vertex shader.
@@ -478,8 +464,7 @@ struct VertexAttribute {
 
 struct VertexBufferLayout {
     array_stride: Int
-    vertex_attribute: Block<VertexAttribute; 32>
-    vertex_attribute_count: Int
+    vertex_attribute: Vec<VertexAttribute; 32>
     step_mode: VertexStepMode
 }
 
@@ -489,7 +474,7 @@ impl BufferHandle {
 
     /// Writes all elements of `data` into the GPU buffer starting at `dest_element_offset`.
     ///
-    /// (for example one element per entry in `Block<Vertex; N>`).
+    /// (for example one element per entry in `Vec<Vertex; N>`).
     /// For a sub-range, use [`BufferHandle::write_at`].
     external 915 fn write_with(mut self, dest_element_offset: Int, data: Any)
 
@@ -595,8 +580,8 @@ external 930 fn create_render_sampled_texture_png(image: Image, format: SampledT
 /// Creates a view into a texture for rendering or sampling
 external 913 fn create_texture_view(texture: TextureHandle, description: String) -> TextureViewHandle
 
-/// Describes the resources at each [`BindGroupLayoutEntry::binding`] within one bind group.
-external 906 fn create_bind_group_layout(entries: [BindGroupLayoutEntry], description: String) -> BindGroupLayoutHandle
+/// Describes the resources in `@binding(0)`, `@binding(1)`, … order within one bind group.
+external 906 fn create_bind_group_layout(entries: [BindingType], description: String) -> BindGroupLayoutHandle
 
 /// Creates a pipeline layout from bind group layouts in group-index order.
 ///
