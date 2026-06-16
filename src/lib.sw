@@ -1,4 +1,5 @@
 // All modules must be imported here to be sure they are compiled
+mod app
 mod audio
 mod bmf
 mod gm
