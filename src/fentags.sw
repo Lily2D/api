@@ -2,33 +2,75 @@
 
 //! FenTags
 //!
-//! A format made by [`@catnipped`](https://bsky.app/profile/ossianboren.bsky.social) and [`@piot`](https://bsky.app/profile/peterbjorklund.bsky.social)
-//! in collaboration. The syntax was formalized, and then used for layout-tags that was needed
-//! in an upcoming game by @catnipped.
+//! FenTags is a lightweight tag language for embedding commands in text.
 //!
-//! We wanted something with tags and strings interleaved, inspired by other text tag formats, like [BBCode](https://en.wikipedia.org/wiki/BBCode).
+//! It was created by [`@catnipped`](https://bsky.app/profile/ossianboren.bsky.social) and
+//! [`@piot`](https://bsky.app/profile/peterbjorklund.bsky.social) in collaboration. We needed
+//! a simple way to describe layouts inlined with text.
 //!
-//! Fen: an area of low, flat, wet land [dictionary](https://www.oxfordlearnersdictionaries.com/us/definition/english/fen)
+//! FenTags is inspired by [BBCode](https://en.wikipedia.org/wiki/BBCode) and similar text
+//! tagging formats.
+//!
+//! The name comes from [*fen*](https://www.oxfordlearnersdictionaries.com/us/definition/english/fen): an area of low, flat, wet land.
+//!
+//! It is recommended to parse FenTags during startup rather than repeatedly at
+//! runtime. Parsing still has a performance cost and may panic from bad input.
 //!
 //! ## Syntax
 //!
-//! A normal string with optional [] tags in-between.
+//! A FenTags document consists of plain text with optional tags embedded throughout.
 //!
-//! `[lower_case_command <OPTIONAL ARGUMENTS>]` or a closing tag `[/lower_case_command]`. The arguments can be either positional or
-//! named arguments, but not allowed to be mixed. Examples:
+//! Opening tags have the form:
 //!
-//! `[some_command -32 42.0]`
-//! `[some_command x_offset=-32 health=42.0]`
+//! ```text
+//! [lower_case_command <optional arguments>]
+//! ```
 //!
-//! Literal values:
-//! - Int
-//! - Float
-//! - Keyword (String)
-//! - Color (`rgba(U8, U8, U8, U8)`)
+//! Most tags do not require a closing tag, only tags that define a "region" must
+//! be terminated with a matching closing tag:
 //!
-//! "constructors" are allowed as values as well:
-//! `[some_command color=CustomConstructor(10, 20, 30)]` but not implemented properly yet
+//! ```text
+//! [/lower_case_command]
+//! ```
 //!
+//! Command arguments may be either positional or named, but the two styles cannot be
+//! mixed within the same tag.
+//!
+//! Positional arguments:
+//!
+//! ```text
+//! [some_command -32 42.0]
+//! ```
+//!
+//! Named arguments:
+//!
+//! ```text
+//! [some_command x_offset=-32 health=42.0]
+//! ```
+//!
+//! Command names and named argument names use lowercase snake_case.
+//!
+//! - start with a lowercase ASCII letter (`a-z`)
+//! - contain only lowercase ASCII letters (`a-z`), digits (`0-9`), and underscores (`_`)
+//! - not end with an underscore
+//! - not contain consecutive underscores
+//!
+//! ## Literal values
+//!
+//! Supported literal value types:
+//!
+//! - Integer Example: `42`
+//! - Float. Example: `99.876`
+//! - Keyword (identifier). Example: `keyword`
+//! - Color (`rgba(U8, U8, U8, U8)`). Example: `rgba(28,44,99,244)`, `rgb(28,99,76)` you can use floats as well.
+//! - Percentage. Example: (`25%`, `99.8%`)
+//! - Constructor-like values for structured types. Example: `CustomColor(10, 20, 30)`
+//! - String. Example: `"hello world!"`
+//!
+//! String literals, percentage literals and constructor values are part of the FenTags specification,
+//! but not implemented in this API yet.
+//!
+//! We think that it is pretty FenTagstic format!
 
 #![api]
 
@@ -41,7 +83,8 @@ enum Value {
     Keyword(String<32>)
     ColorRgb(U8, U8, U8)
     ColorRgba(U8, U8, U8, U8)
-    // TODO: maybe implement percentage suffix
+    // TODO: implement percentage suffix
+    // TODO: implement strings // String(String<256>)
 }
 
 struct Arguments {
@@ -49,14 +92,14 @@ struct Arguments {
 }
 
 enum Element {
-    String(String)
+    String(String<256>) // TODO: in the future it should be able to use String without in types returned from Host.
     Command(Int, Arguments) // maybe { command_id: Int, arguments: Arguments } is better?
 }
 
 
 struct CommandDefinition {
-    name: String
-    parameter_names: Vec<String; MAX_PARAMETER_COUNT>
+    name: String<32>
+    parameter_names: Vec<String<32>; MAX_PARAMETER_COUNT>
 }
 
 struct Lexer
