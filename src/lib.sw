@@ -2,8 +2,10 @@
 mod app
 mod audio
 mod bmf
+mod fentags
 mod gm
 mod input
+mod layout_tags
 mod net
 mod peatc
 mod persistence
