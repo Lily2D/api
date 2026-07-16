@@ -2,6 +2,7 @@
 mod app
 mod audio
 mod bmf
+mod config
 mod fentags
 mod gm
 mod input
