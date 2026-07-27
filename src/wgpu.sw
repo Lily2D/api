@@ -44,7 +44,10 @@ struct StencilReference {
 }
 
 
-type BufferHandle = Int
+type IndexBufferHandle = Int
+type VertexBufferHandle = Int
+type StorageBufferHandle = Int
+type UniformBufferHandle = Int
 type SamplerHandle = Int
 type TextureHandle = Int
 type TextureViewHandle = Int
@@ -198,6 +201,15 @@ enum SampledTextureFormat {
     Rgba16Float
 }
 
+/// Texture formats that can both be sampled and used as color attachments.
+enum RenderSampledTextureFormat {
+    R8Unorm
+    Rgba8Unorm
+    Rgba8UnormSrgb
+    Rgba16Float
+    R32Uint
+}
+
 /// Texture format for color attachments.
 enum RenderTextureFormat {
     R8Unorm
@@ -221,18 +233,6 @@ enum DepthTextureFormat {
     Depth24Plus
     Depth24PlusStencil8
     Depth32Float
-}
-
-/// Buffer usage flags
-enum BufferUsage {
-    /// For vertex data
-    Vertex
-    /// For index data
-    Index
-    /// For uniform/constant data
-    Uniform
-    /// For storage buffers
-    Storage
 }
 
 /// Options for creating render pipeline.
@@ -259,19 +259,19 @@ struct DrawIndexed {
     instance: Range
 }
 
-// should probably not use this?
+// Prefer DrawIndexed when possible
 struct Draw {
     vertex: Range
     instance: Range
 }
 
 struct SetIndexBuffer {
-    buffer: BufferHandle
+    buffer: IndexBufferHandle
 }
 
 struct SetVertexBuffer {
     slot: Int
-    buffer: BufferHandle
+    buffer: VertexBufferHandle
 }
 
 enum Entry {
@@ -381,19 +381,19 @@ impl RenderPass {
         self.entries.push( SetBindGroup( { index: group_index, group: bind_group } ) )
     }
 
-    /// Sets the [`BufferHandle`] at vertex buffer slot.
+    /// Sets the [`VertexBufferHandle`] at vertex buffer slot.
     ///
     /// `slot` is the index of the [`VertexBufferLayout`] in
     /// [`create_render_pipeline`].
-    fn set_vertex_buffer(mut self, slot: Int, vertex_buffer: BufferHandle) {
+    fn set_vertex_buffer(mut self, slot: Int, vertex_buffer: VertexBufferHandle) {
         self.entries.push( SetVertexBuffer( { slot: slot, buffer: vertex_buffer } ) )
     }
 
-    /// Sets the index [`BufferHandle`] for indexed drawing.
+    /// Sets the [`IndexBufferHandle`] for indexed drawing.
     ///
     /// Only buffers created with [`create_index_buffer_u16`] are supported.
     // TODO: Only one index buffer supported now (U16)
-    fn set_index_buffer(mut self, index_buffer: BufferHandle) {
+    fn set_index_buffer(mut self, index_buffer: IndexBufferHandle) {
         self.entries.push( SetIndexBuffer( { buffer: index_buffer } ) )
     }
 
@@ -419,7 +419,8 @@ impl RenderPass {
 
 // The group is almost as setting the instance values for that struct
 enum BindGroupEntry {
-    Buffer BufferHandle
+    UniformBuffer UniformBufferHandle
+    StorageBuffer StorageBufferHandle
     TextureView TextureViewHandle
     Sampler SamplerHandle
 }
@@ -468,29 +469,81 @@ struct VertexBufferLayout {
     step_mode: VertexStepMode
 }
 
-impl BufferHandle {
-    /// Writes all elements of `data` into the GPU buffer starting at element `0`.
-    external 911 fn write(mut self, data: Any)
-
-    /// Writes all elements of `data` into the GPU buffer starting at `dest_element_offset`.
+impl UniformBufferHandle {
+    /// Writes a uniform-layout struct into a uniform GPU buffer.
     ///
-    /// (for example one element per entry in `Vec<Vertex; N>`).
-    /// For a sub-range, use [`BufferHandle::write_at`].
-    external 915 fn write_with(mut self, dest_element_offset: Int, data: Any)
+    /// `value` must be a struct marked as having uniform layout, and must
+    /// have the same size as the buffer.
+    external 911 fn write(mut self, value: Any)
 
-    /// Writes `element_count` elements of `data` into the GPU buffer.
+    /// Releases the underlying GPU uniform buffer handle.
+    /// After calling this, the handle must not be used again.
+    external 921 fn drop(mut self)
+
+}
+
+impl IndexBufferHandle {
+    /// Writes all elements from the provided block or block slice
+    /// into the GPU index buffer starting at `dest_index`.
     ///
-    /// Copies elements `[data_element_offset .. data_element_offset + element_count)` from `data`
-    /// into the GPU buffer starting at element `dest_element_offset`.
+    /// For a sub-range, use [`IndexBufferHandle::write_at`].
+    external 915 fn write_with(mut self, dest_index: Int, block: Any)
+
+    /// Writes `count` elements from `block` into the GPU index buffer
+    /// at `dest_index`, starting at `src_index`.
     external 917 fn write_at(
         mut self,
-        dest_element_offset: Int,
-        data: Any,
-        data_element_offset: Int,
-        element_count: Int
+        dest_index: Int,
+        block: Any,
+        src_index: Int,
+        count: Int
     )
 
-    /// Releases the underlying GPU buffer handle.
+    /// Releases the underlying GPU index buffer handle.
+    /// After calling this, the handle must not be used again.
+    external 921 fn drop(mut self)
+}
+
+impl VertexBufferHandle {
+    /// Writes all elements from the provided block or block slice
+    /// into the GPU vertex buffer starting at `dest_index`.
+    ///
+    /// For a sub-range, use [`VertexBufferHandle::write_at`].
+    external 915 fn write_with(mut self, dest_index: Int, block: Any)
+
+    /// Writes `count` elements from `block` into the GPU vertex buffer
+    /// at `dest_index`, starting at `src_index`.
+    external 917 fn write_at(
+        mut self,
+        dest_index: Int,
+        block: Any,
+        src_index: Int,
+        count: Int
+    )
+
+    /// Releases the underlying GPU vertex buffer handle.
+    /// After calling this, the handle must not be used again.
+    external 921 fn drop(mut self)
+}
+
+impl StorageBufferHandle {
+    /// Writes all elements from the provided block or block slice
+    /// into the GPU storage buffer starting at `dest_index`.
+    ///
+    /// For a sub-range, use [`StorageBufferHandle::write_at`].
+    external 915 fn write_with(mut self, dest_index: Int, block: Any)
+
+    /// Writes `count` elements from `block` into the GPU storage buffer
+    /// at `dest_index`, starting at `src_index`.
+    external 917 fn write_at(
+        mut self,
+        dest_index: Int,
+        block: Any,
+        src_index: Int,
+        count: Int
+    )
+
+    /// Releases the underlying GPU storage buffer handle.
     /// After calling this, the handle must not be used again.
     external 921 fn drop(mut self)
 }
@@ -541,12 +594,23 @@ impl SamplerHandle {
 }
 
 
-// Internal
-external 900 fn create_index_buffer_u16(buffer: Any, description: String) -> BufferHandle
-external 901 fn create_vertex_buffer(buffer: Any, description: String) -> BufferHandle
+//| === Buffers ===
+external 900 fn create_index_buffer_u16(buffer: Any, description: String) -> IndexBufferHandle
 
-/// Creates an empty GPU buffer without initial data.
-external 914 fn create_buffer(size: Int, usage: BufferUsage, description: String) -> BufferHandle
+/// Allocates an empty vertex buffer for `element_count` elements of `type_id`.
+/// Call using `alloc_vertex_buffer::<YourType>(element_count, "some string")`.
+external 993 fn alloc_vertex_buffer(type_id: Int, element_count: Int, description: String) -> VertexBufferHandle
+external 901 fn create_vertex_buffer(buffer: Any, description: String) -> VertexBufferHandle
+
+external 994 fn create_storage_buffer(buffer: Any, description: String) -> StorageBufferHandle
+
+/// Allocates an empty storage buffer for `element_count` elements of `type_id`.
+/// Call using `alloc_storage_buffer::<YourType>(element_count, "some string")`.
+external 995 fn alloc_storage_buffer(type_id: Int, element_count: Int, description: String) -> StorageBufferHandle
+
+external 910 fn create_uniform_buffer(buffer: Any, description: String) -> UniformBufferHandle
+
+//| === Bindgroup and Sampler ===
 
 /// Creates a bind group instance for a layout from [`create_bind_group_layout`].
 ///
@@ -555,30 +619,35 @@ external 914 fn create_buffer(size: Int, usage: BufferUsage, description: String
 external 902 fn create_bind_group(bind_group_layout: BindGroupLayoutHandle, entries: [BindGroupEntry], description: String) -> BindGroupHandle
 external 903 fn create_sampler(config: SamplerConfig, description: String) -> SamplerHandle
 
-/// Creates an empty texture that can be sampled (read).
-external 927 fn create_sampled_texture(width: Int, height: Int, format: SampledTextureFormat, description: String) -> TextureHandle
+//| === Textures and Views ===
 
-/// Creates an empty texture that can be used as a color render attachment.
-external 912 fn create_render_texture(width: Int, height: Int, format: RenderTextureFormat, description: String) -> TextureHandle
+/// Allocates an empty texture that can be sampled (read).
+external 927 fn alloc_sampled_texture(width: Int, height: Int, format: SampledTextureFormat, description: String) -> TextureHandle
 
-/// Creates an empty texture that can be both rendered to (write) and sampled (read).
-external 928 fn create_render_sampled_texture(width: Int, height: Int, format: SampledTextureFormat, description: String) -> TextureHandle
+/// Allocates an empty texture that can be used as a color render attachment.
+external 912 fn alloc_render_texture(width: Int, height: Int, format: RenderTextureFormat, description: String) -> TextureHandle
 
-/// Creates an empty texture that can be used as a storage texture.
-external 931 fn create_storage_texture(width: Int, height: Int, format: StorageTextureFormat, description: String) -> TextureHandle
+/// Allocates an empty texture that can be both rendered to (write) and sampled (read).
+external 928 fn alloc_render_sampled_texture(width: Int, height: Int, format: RenderSampledTextureFormat, description: String) -> TextureHandle
 
-/// Creates an empty texture that can be used as a depth/stencil attachment.
-// TODO: Should return a specific DepthTextureHandle in the future
-external 929 fn create_depth_texture(width: Int, height: Int, format: DepthTextureFormat, description: String) -> TextureHandle
+/// Allocates an empty texture that can be used as a storage texture.
+external 931 fn alloc_storage_texture(width: Int, height: Int, format: StorageTextureFormat, description: String) -> TextureHandle
+
+/// Allocates an empty texture that can be used as a depth/stencil attachment.
+// TODO: Should return a specific DepthTextureHandle in the future?
+external 929 fn alloc_depth_texture(width: Int, height: Int, format: DepthTextureFormat, description: String) -> TextureHandle
 
 // Creates a sampled texture from a png. can only be sampled (read).
 external 920 fn create_sampled_texture_png(image: Image, format: SampledTextureFormat, description: String) -> TextureHandle
 
 // Creates a sampled texture from a png. can only be sampled (read) and rendered to (write). you usually want to use `create_sampled_texture_png`
-external 930 fn create_render_sampled_texture_png(image: Image, format: SampledTextureFormat, description: String) -> TextureHandle
+external 930 fn create_render_sampled_texture_png(image: Image, format: RenderSampledTextureFormat, description: String) -> TextureHandle
 
 /// Creates a view into a texture for rendering or sampling
 external 913 fn create_texture_view(texture: TextureHandle, description: String) -> TextureViewHandle
+
+
+//| === Layouts ===
 
 /// Describes the resources in `@binding(0)`, `@binding(1)`, … order within one bind group.
 external 906 fn create_bind_group_layout(entries: [BindingType], description: String) -> BindGroupLayoutHandle
@@ -588,16 +657,18 @@ external 906 fn create_bind_group_layout(entries: [BindingType], description: St
 /// The first layout is group index `0` (`@group(0)`), the second is `1`, and so on.
 external 907 fn create_pipeline_layout(groups: [BindGroupLayoutHandle], description: String) -> PipelineLayoutHandle
 
+
+//| === Pipeline ===
 /// Creates a render pipeline targeting the current surface (swapchain) format.
 external 908 fn create_render_pipeline(layout: PipelineLayoutHandle, buffers: [VertexBufferLayout], shader_module: Shader, options: RenderPipelineOptions, description: String) -> RenderPipelineHandle
 
 /// Creates a render pipeline targeting an explicit color format (for offscreen pipelines).
 external 992 fn create_render_pipeline_with_color_format(layout: PipelineLayoutHandle, buffers: [VertexBufferLayout], shader_module: Shader, color_format: RenderTextureFormat, options: RenderPipelineOptions, description: String) -> RenderPipelineHandle
 
+//| === render pass and query ===
+
 /// Submits a render pass for execution
 external 905 fn add_pass(pass: RenderPass, description: String)
-
-external 910 fn create_uniform_buffer(buffer: Any, description: String) -> BufferHandle
 
 /// The size of the renderable surface. Return (Width, Height).
 external 990 fn surface_extent() -> (Int, Int)
