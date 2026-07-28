@@ -483,12 +483,6 @@ impl UniformBufferHandle {
 }
 
 impl IndexBufferHandle {
-    /// Writes all elements from the provided block or block slice
-    /// into the GPU index buffer starting at `dest_index`.
-    ///
-    /// For a sub-range, use [`IndexBufferHandle::write_at`].
-    external 915 fn write_with(mut self, dest_index: Int, block: Any)
-
     /// Writes `count` elements from `block` into the GPU index buffer
     /// at `dest_index`, starting at `src_index`.
     external 917 fn write_at(
@@ -499,18 +493,20 @@ impl IndexBufferHandle {
         count: Int
     )
 
+    /// Writes every element in `slice` to the GPU index buffer, starting at
+    /// `dest_index`.
+    ///
+    /// Prefer [`IndexBufferHandle::write_at`].
+    /// It accepts the block directly and avoids constructing a slice first.
+    external 915 fn write_with(mut self, dest_index: Int, slice: Any)
+
+
     /// Releases the underlying GPU index buffer handle.
     /// After calling this, the handle must not be used again.
     external 921 fn drop(mut self)
 }
 
 impl VertexBufferHandle {
-    /// Writes all elements from the provided block or block slice
-    /// into the GPU vertex buffer starting at `dest_index`.
-    ///
-    /// For a sub-range, use [`VertexBufferHandle::write_at`].
-    external 915 fn write_with(mut self, dest_index: Int, block: Any)
-
     /// Writes `count` elements from `block` into the GPU vertex buffer
     /// at `dest_index`, starting at `src_index`.
     external 917 fn write_at(
@@ -521,18 +517,20 @@ impl VertexBufferHandle {
         count: Int
     )
 
+    /// Writes every element in `slice` to the GPU vertex buffer, starting at
+    /// `dest_index`.
+    ///
+    /// Prefer [`VertexBufferHandle::write_at`].
+    /// It accepts the block directly and avoids constructing a slice first.
+    external 915 fn write_with(mut self, dest_index: Int, slice: Any)
+
+
     /// Releases the underlying GPU vertex buffer handle.
     /// After calling this, the handle must not be used again.
     external 921 fn drop(mut self)
 }
 
 impl StorageBufferHandle {
-    /// Writes all elements from the provided block or block slice
-    /// into the GPU storage buffer starting at `dest_index`.
-    ///
-    /// For a sub-range, use [`StorageBufferHandle::write_at`].
-    external 915 fn write_with(mut self, dest_index: Int, block: Any)
-
     /// Writes `count` elements from `block` into the GPU storage buffer
     /// at `dest_index`, starting at `src_index`.
     external 917 fn write_at(
@@ -542,6 +540,13 @@ impl StorageBufferHandle {
         src_index: Int,
         count: Int
     )
+
+    /// Writes every element in `slice` to the GPU storage buffer, starting at
+    /// `dest_index`.
+    ///
+    /// Prefer [`StorageBufferHandle::write_at`].
+    /// It accepts the block directly and avoids constructing a slice first.
+    external 915 fn write_with(mut self, dest_index: Int, slice: Any)
 
     /// Releases the underlying GPU storage buffer handle.
     /// After calling this, the handle must not be used again.
