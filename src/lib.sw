@@ -10,6 +10,7 @@ mod layout_tags
 mod net
 mod peatc
 mod persistence
+mod pixels
 mod screen
 mod user
 mod wgpu_types
