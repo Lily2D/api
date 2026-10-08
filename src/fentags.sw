@@ -78,9 +78,9 @@ const MAX_PARAMETER_COUNT = 16
 
 enum Value {
     NotSet
-    Int(Int)
-    Float(Float)
-    Keyword(String<32>)
+    Int Int
+    Float Float
+    Keyword String<32>
     ColorRgb(U8, U8, U8)
     ColorRgba(U8, U8, U8, U8)
     // TODO: implement percentage suffix
@@ -92,7 +92,7 @@ struct Arguments {
 }
 
 enum Element {
-    String(String<256>) // TODO: in the future it should be able to use String without in types returned from Host.
+    String String<256> // TODO: in the future it should be able to use String without in types returned from Host.
     Command(Int, Arguments) // maybe { command_id: Int, arguments: Arguments } is better?
 }
 

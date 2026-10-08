@@ -44,15 +44,15 @@ struct ColorRgb {
 }
 
 enum Element {
-    String(String<256>) // TODO: in the future, APIs should be able to provide temporary strings, without storage
-    ColorRgb(ColorRgb)
-    ColorRgba(ColorRgba)
+    String String<256> // TODO: in the future, APIs should be able to provide temporary strings, without storage
+    ColorRgb ColorRgb
+    ColorRgba ColorRgba
     ColorReset
-    Icon(Int)
-    Font(Int)
+    Icon Int
+    Font Int
     FontReset
-    LineHeight(Int)
-    RegionBegin(Int)
+    LineHeight Int
+    RegionBegin Int
     RegionEnd
     NewLine
 }
