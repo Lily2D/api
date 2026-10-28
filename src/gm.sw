@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Peter Bjorklund. All rights reserved.
+
 //! # Lily Math library for Graphics and Rendering.
 //!
 //! Math library only for presentation, has support for 2D and 3D vector, Quaternion, and Matrix
@@ -55,12 +57,12 @@ struct Vec2 {
 }
 
 impl Vec2 {
-    // === Construction ===
+    //| === Construction ===
 
     /// Return a new 2D vector
     external 11100 fn new(x: Float, y: Float) -> Vec2
 
-    // === Components ===
+    //| === Components ===
 
     /// Return the x component
     external 11108 fn x(self) -> Float
@@ -68,19 +70,19 @@ impl Vec2 {
     /// Return the y component
     external 11109 fn y(self) -> Float
 
-    // === Properties ===
+    //| === Properties ===
 
     /// Return the magnitude (length) of the vector
     external 11101 fn magnitude(self) -> Float
 
-    // === Transformation ===
+    //| === Transformation ===
 
     /// Return a normalized (unit length) vector.
     ///
     /// Behavior is undefined if the input has zero magnitude.
     external 11102 fn normalize(self) -> Vec2
 
-    // === Operators ===
+    //| === Operators ===
 
     /// Add two vectors
     external 11103 fn add(self, other: Vec2) -> Vec2
@@ -91,7 +93,7 @@ impl Vec2 {
     /// Compute the dot product of two vectors
     external 11105 fn dot(self, other: Vec2) -> Float
 
-    // === Interpolation ===
+    //| === Interpolation ===
 
     /// Linear interpolation between two vectors.
     ///
@@ -102,7 +104,7 @@ impl Vec2 {
     /// Distance between two points
     external 11107 fn distance(self, other: Vec2) -> Float
 
-    // === Debug ===
+    //| === Debug ===
 
     /// Convert vector to string for debugging
     external 11199 fn string(self) -> String
@@ -114,12 +116,12 @@ struct Vec3 {
 }
 
 impl Vec3 {
-    // === Construction ===
+    //| === Construction ===
 
     /// Return a new 3D vector
     external 11200 fn new(x: Float, y: Float, z: Float) -> Vec3
 
-    // === Components ===
+    //| === Components ===
 
     /// Return the x component
     external 11208 fn x(self) -> Float
@@ -130,19 +132,19 @@ impl Vec3 {
     /// Return the z component
     external 11210 fn z(self) -> Float
 
-    // === Query ===
+    //| === Query ===
 
     /// Return the magnitude (length) of the vector
     external 11201 fn magnitude(self) -> Float
 
-    // === Transformation ===
+    //| === Transformation ===
 
     /// Return a normalized (unit magnitude) vector.
     ///
     /// Behavior is undefined if the input has zero magnitude.
     external 11202 fn normalize(self) -> Vec3
 
-    // === Operators ===
+    //| === Operators ===
 
     /// Add two vectors
     external 11203 fn add(self, other: Vec3) -> Vec3
@@ -153,7 +155,7 @@ impl Vec3 {
     /// Compute the dot product of two vectors
     external 11205 fn dot(self, other: Vec3) -> Float
 
-    // === Interpolation ===
+    //| === Interpolation ===
 
     /// Linear interpolation between two vectors.
     ///
@@ -164,7 +166,7 @@ impl Vec3 {
     /// Distance between two points
     external 11207 fn distance(self, other: Vec3) -> Float
 
-    // === Debug ===
+    //| === Debug ===
 
     /// Convert vector to string for debugging
     external 11299 fn string(self) -> String
@@ -176,19 +178,19 @@ struct Mat3 {
 }
 
 impl Mat3 {
-    // === Construction ===
+    //| === Construction ===
 
     /// Return an identity matrix
     external 11300 fn identity() -> Mat3
 
-    // === Operators ===
+    //| === Operators ===
 
     /// Multiply (compose) two matrices.
     ///
     /// Multiplication order matters.
     external 11301 fn mul(self, other: Mat3) -> Mat3
 
-    // === Debug ===
+    //| === Debug ===
 
     /// Convert matrix to string for debugging
     external 11399 fn string(self) -> String
@@ -201,12 +203,12 @@ struct Vec4 {
 }
 
 impl Vec4 {
-    // === Construction ===
+    //| === Construction ===
 
     /// Return a new 4D vector
     external 11400 fn new(x: Float, y: Float, z: Float, w: Float) -> Vec4
 
-    // === Components ===
+    //| === Components ===
 
     /// Return the x component
     external 11401 fn x(self) -> Float
@@ -220,7 +222,7 @@ impl Vec4 {
     /// Return the w component
     external 11404 fn w(self) -> Float
 
-    // === Debug ===
+    //| === Debug ===
 
     /// Convert vector to string for debugging
     external 11499 fn string(self) -> String
@@ -233,7 +235,7 @@ struct Quat {
 }
 
 impl Quat {
-    // === Construction ===
+    //| === Construction ===
 
     /// Return an identity quaternion (no rotation)
     external 11500 fn identity() -> Quat
@@ -247,7 +249,7 @@ impl Quat {
     /// Return a quaternion from rotation around Y axis
     external 11503 fn from_rotation_y(radians: Float) -> Quat
 
-    // === Components ===
+    //| === Components ===
 
     /// Return the x component
     external 11509 fn x(self) -> Float
@@ -261,7 +263,7 @@ impl Quat {
     /// Return the w component
     external 11512 fn w(self) -> Float
 
-    // === Transformation ===
+    //| === Transformation ===
 
     /// Return a normalized (unit magnitude) quaternion
     ///
@@ -273,7 +275,7 @@ impl Quat {
     /// Behavior is undefined if the quaternion has zero magnitude.
     external 11507 fn inverse(self) -> Quat
 
-    // === Operators ===
+    //| === Operators ===
 
     /// Multiply (compose) two quaternions.
     ///
@@ -283,7 +285,7 @@ impl Quat {
     /// Multiplication order matters and is not commutative.
     external 11504 fn mul(self, other: Quat) -> Quat
 
-    // === Interpolation ===
+    //| === Interpolation ===
 
     /// Return the spherical linear interpolation between `self` and `other`.
     ///
@@ -303,7 +305,7 @@ impl Quat {
     /// `t = 1.0` returns `other`.
     external 11513 fn nlerp(self, other: Quat, t: Float) -> Quat
 
-    // === Debug ===
+    //| === Debug ===
 
     /// Convert quaternion to string for debugging
     external 11599 fn string(self) -> String
@@ -323,7 +325,7 @@ struct Mat4 {
 }
 
 impl Mat4 {
-    // === Construction ===
+    //| === Construction ===
 
     /// Return an identity matrix (no transformation)
     external 11613 fn identity() -> Mat4
@@ -370,7 +372,7 @@ impl Mat4 {
     /// Return a full transform from scale, rotation and translation
     external 11615 fn from_scale_rotation_translation(scale: Vec3, rotation: Quat, translation: Vec3) -> Mat4
 
-    // === Operators ===
+    //| === Operators ===
 
     /// Multiply (compose) two matrices.
     ///
@@ -393,7 +395,7 @@ impl Mat4 {
     /// (aspect ratio and orthographic/perspective)
     external 11602 fn mul(self, other: Mat4) -> Mat4
 
-    // === Components ===
+    //| === Components ===
 
     /// Return the translation component (same as w_axis)
     external 11607 fn translation(self) -> Vec3
@@ -410,12 +412,12 @@ impl Mat4 {
     /// Return the fourth column vector (translation)
     external 11611 fn w_axis(self) -> Vec3
 
-    // === Decomposition ===
+    //| === Decomposition ===
 
     /// Decompose transform into scale, rotation and translation.
     external 11616 fn to_scale_rotation_translation(self) -> (Vec3, Quat, Vec3)
 
-    // === Utilities ===
+    //| === Utilities ===
 
     /// Convert to WebGPU type Mat4f (array of 16 F32)
     external 11605 fn to_mat4f(self) -> Mat4f
@@ -429,7 +431,7 @@ impl Mat4 {
     /// Transpose the matrix (swap rows and columns)
     external 11617 fn transpose(self) -> Mat4
 
-    // === Debug ===
+    //| === Debug ===
 
     /// Convert matrix to string for debugging.
     ///

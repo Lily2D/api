@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Peter Bjorklund. All rights reserved.
+
+
 //! # Datagram API
 //!
 //! Send and receive datagrams and query latency

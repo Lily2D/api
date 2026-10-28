@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Peter Bjorklund. All rights reserved.
+
 //! # Font Loader API
 //!
 //! load [bmfont](https://www.angelcode.com/products/bmfont/) format

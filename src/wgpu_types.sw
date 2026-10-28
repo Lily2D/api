@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Peter Bjorklund. All rights reserved.
+
 //! # WebGPU shared basic types
 //!
 //! Types that are common to refer to, `Vec2f`, `Vec4f` and `Mat4f`

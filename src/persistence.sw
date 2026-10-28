@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Peter Bjorklund. All rights reserved.
+
 //! # Persistence API
 //!
 //! User data that should persist between game sessions, such as user preferences and game saves.

@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Peter Bjorklund. All rights reserved.
+
 //! # WebGPU Library for Lily
 //!
 //! Render passes, shaders and buffers for [WebGPU](https://en.wikipedia.org/wiki/WebGPU).
@@ -324,7 +326,7 @@ struct RenderPass {
 
 
 impl RenderPass {
-    // === Attachments ===
+    //| === Attachments ===
 
     /// Adds a [`ColorAttachment`] to render into.
     ///
@@ -348,7 +350,7 @@ impl RenderPass {
         self.depth_store = store
     }
 
-    // === Pipeline State ===
+    //| === Pipeline State ===
 
     /// Sets the active [`RenderPipelineHandle`] for upcoming draw calls.
     fn set_pipeline(mut self, pipeline: RenderPipelineHandle) {
@@ -370,7 +372,7 @@ impl RenderPass {
         self.entries.push( SetStencilReference( { value: reference_value } ) )
     }
 
-    // === Buffers & Resources ===
+    //| === Buffers & Resources ===
 
     /// Binds a [`BindGroupHandle`] at `group_index` for future draw calls.
     ///
@@ -397,7 +399,7 @@ impl RenderPass {
         self.entries.push( SetIndexBuffer( { buffer: index_buffer } ) )
     }
 
-    // === Draw ===
+    //| === Draw ===
 
     /// Draws vertices without an index buffer. Prefer [`draw_indexed`] if possible.
     ///
