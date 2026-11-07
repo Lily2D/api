@@ -1,1 +1,1 @@
-src_file: wgpu_types.sw
+root_module: wgpu_types

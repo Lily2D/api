@@ -1,1 +1,2 @@
+root_module: gm
 crate_dependencies: [wgpu_types]
