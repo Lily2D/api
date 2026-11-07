@@ -1,5 +1,3 @@
-// Copyright (c) 2026 Peter Bjorklund. All rights reserved.
-
 //! User API
 //!
 //! Returns information about the logged in user

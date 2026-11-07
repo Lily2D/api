@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Peter Bjorklund. All rights reserved.
+// Copyright Peter Björklund. All rights reserved.
 
 //! # Pixel API
 //!

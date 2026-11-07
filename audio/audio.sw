@@ -1,5 +1,3 @@
-// Copyright (c) 2026 Peter Bjorklund. All rights reserved.
-
 //! # Lily Audio API
 //!
 //! Sound effects and music playback with ADSR support.
@@ -69,7 +67,7 @@ struct SoundDefinition {
     gate_duration: Int
 }
 
-//| === Resource setup and streaming ===
+// === Resource setup and streaming ===
 
 /// Start streaming an OGG Vorbis resource on a voice.
 ///
@@ -94,7 +92,7 @@ external 12016 fn load_wav_mono(resource_id: SoundId, sound: SoundDefinition)
 /// Load a stereo WAV file into a static buffer.
 external 12017 fn load_wav_stereo(resource_id: SoundId, sound: SoundDefinition)
 
-//| === Voice actions ===
+// === Voice actions ===
 
 /// Trigger a sound at its root note.
 ///
@@ -121,7 +119,7 @@ external 12022 fn pause(id: Voice)
 external 12023 fn resume(id: Voice)
 
 
-//| === Query functions ===
+// === Query functions ===
 
 /// Get the current state of a voice.
 external 12025 fn get_voice_state(id: Voice) -> VoiceState
@@ -148,7 +146,7 @@ external 12028 fn get_playback_progress(id: Voice) -> Float
 /// Active = Playing, Paused, or Releasing.
 external 12029 fn get_active_voice_count() -> Int
 
-//| === Control functions ===
+// === Control functions ===
 
 /// Change voice volume.
 /// 0.0 = silent, 1.0 = full scale.

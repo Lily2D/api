@@ -1,5 +1,3 @@
-// Copyright (c) 2026 Peter Bjorklund. All rights reserved.
-
 //! # Input API for Lily2D
 //!
 //! Input abstraction for Gamepad, Keyboard and Mouse. Will support Steam Input in the future.

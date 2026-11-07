@@ -1,5 +1,10 @@
 name: lily
-version: "0.6.112"
+version: "0.7.0"
 description: built in API for Lily2D
 edition: 2026
 type: :lib
+src_file: lib.sw
+
+package: {
+    crates: [app, audio, bmf, config, fentags, gm, input, layout_tags, net, persistence, pixels, screen, user, wgpu, wgpu_types]
+}
