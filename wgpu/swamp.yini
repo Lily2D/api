@@ -1,1 +1,1 @@
-src_file: wgpu.sw
+root_module: wgpu
