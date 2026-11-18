@@ -335,7 +335,7 @@ impl RenderPass {
 
     /// Sets the depth attachment for depth testing using a [`TextureViewHandle`].
     fn set_depth_attachment(mut self, depth_view: TextureViewHandle) { // TODO: should be DepthViewHandle in the future
-        self.depth_attachment = depth_view
+        self.depth_attachment = depth_view::<Int>
         self.depth_should_clear = true
         self.depth_clear_value = 1.0
         self.depth_store = true
