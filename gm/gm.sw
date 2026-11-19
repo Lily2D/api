@@ -370,7 +370,7 @@ impl Mat4 {
     /// Return a full transform from scale, rotation and translation
     external 11615 fn from_scale_rotation_translation(scale: Vec3, rotation: Quat, translation: Vec3) -> Mat4
 
-    // === Operators ===
+    //| === Operators ===
 
     /// Multiply (compose) two matrices.
     ///
@@ -393,7 +393,7 @@ impl Mat4 {
     /// (aspect ratio and orthographic/perspective)
     external 11602 fn mul(self, other: Mat4) -> Mat4
 
-    // === Components ===
+    //| === Components ===
 
     /// Return the translation component (same as w_axis)
     external 11607 fn translation(self) -> Vec3
@@ -415,7 +415,7 @@ impl Mat4 {
     /// Decompose transform into scale, rotation and translation.
     external 11616 fn to_scale_rotation_translation(self) -> (Vec3, Quat, Vec3)
 
-    // === Utilities ===
+    //| === Utilities ===
 
     /// Convert to WebGPU type Mat4f (array of 16 F32)
     external 11605 fn to_mat4f(self) -> Mat4f
@@ -429,7 +429,7 @@ impl Mat4 {
     /// Transpose the matrix (swap rows and columns)
     external 11617 fn transpose(self) -> Mat4
 
-    // === Debug ===
+    //| === Debug ===
 
     /// Convert matrix to string for debugging.
     ///

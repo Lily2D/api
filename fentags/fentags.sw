@@ -105,5 +105,5 @@ struct CommandDefinition {
 struct Lexer
 
 impl Lexer {
-    external 44500 fn lex(input: String, commands: [CommandDefinition]) -> [Element]
+    external 44500 fn lex(input: String, commands: [CommandDefinition]) -> Vec<Element>
 }

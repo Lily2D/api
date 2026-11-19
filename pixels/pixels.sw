@@ -70,7 +70,7 @@ external 124 fn sprite(image: Image, cell_index: Int, x: Int, y: Int)
 /// Draws an image cell with its upper-left corner at (x, y), optionally flipped.
 external 122 fn sprite_ex(image: Image, cell_index: Int, x: Int, y: Int, flip_x: Bool, flip_y: Bool)
 
-/// Raw variants if you want to use your own pixels (`[PaletteIndex]`)
+/// Raw variants accepting a slice of your own pixels (`[PaletteIndex]`)
 external 105 fn sprite_raw(x: Int, y: Int, width: Int, colors: [PaletteIndex])
 external 108 fn sprite_raw_flip(x: Int, y: Int, width: Int, colors: [PaletteIndex], flip_x: Bool, flip_y: Bool)
 external 119 fn sprite_raw_ex(x: Int, y: Int, width: Int, height: Int, colors_offset: Int, colors_stride: Int, colors: [PaletteIndex])
@@ -99,7 +99,7 @@ struct TilemapParams {
     tile_stride: Int // How many tile ids are in each map row
 }
 
-/// Draws a pixel-sized viewport into a tilemap.
+/// Draws a pixel-sized viewport into a tilemap using a slice of tile indices.
 external 123 fn tilemap(image: Image, viewport: Rect, pixel_offset_x: Int, pixel_offset_y: Int, tiles: [TileIndex], params: TilemapParams)
 
 
@@ -111,5 +111,5 @@ struct TilemapExParams {
     colors_width: Int // how many pixels in width in the tilemap
 }
 
-/// Draws a raw tilemap
+/// Draws a raw tilemap using slices of tile indices and palette indices.
 external 120 fn tilemap_raw_ex(x: Int, y: Int, grid_width: Int, grid_height: Int, params: TilemapExParams, tiles: [TileIndex], colors: [PaletteIndex])

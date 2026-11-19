@@ -19,7 +19,7 @@ struct ExclusiveMode {
 //| Querying screen exclusive modes (fullscreen).
 
 /// Return all known exclusive fullscreen modes.
-external 17400 fn exclusive_modes() -> [ExclusiveMode]
+external 17400 fn exclusive_modes() -> Vec<ExclusiveMode>
 
 /// Return true if exclusive fullscreen modes are supported.
 /// Similar to exclusive_modes().len() != 0

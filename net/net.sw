@@ -7,7 +7,7 @@
 #![api]
 
 struct Net {
-    handle: Int,
+    handle: Int
 }
 
 impl Net {

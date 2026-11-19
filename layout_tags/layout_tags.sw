@@ -61,5 +61,5 @@ enum Element {
 struct Parser
 
 impl Parser {
-    external 44600 fn parse(input: String) -> [Element]
+    external 44600 fn parse(input: String) -> Vec<Element>
 }
